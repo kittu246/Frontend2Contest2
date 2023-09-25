@@ -17,19 +17,19 @@
         <div id="myPortal">
           <div id="searchSection">
             <input placeholder="Search" type="text" name="search" id="myInput"  />
-            <button class="btn" id="SearchBtn">Search</button>
+            <button class="btn" id="SearchBtn" >Search</button>
           </div>
           <div id="buttonSection">
-            <button class="btn" id="az">Sort A -> Z</button>
-            <button class="btn" id="za">Sort Z -> A</button>
-            <button class="btn" id="marks">Sort By Marks</button>
-            <button class="btn" id="passing">Sort By Passing</button>
-            <button class="btn" id="class">Sort By Class</button>
-            <button class="btn" id="gender">Sort By Gender</button>
+            <button class="btn" onclick="sort('ased')">Sort A -> Z</button>
+            <button class="btn" onclick="sort('desc')">Sort Z -> A</button>
+            <button class="btn" onclick="sort('marks')">Sort By Marks</button>
+            <button class="btn" onclick="sort('passing')">Sort By Passing</button>
+            <button class="btn" onclick="sort('Class')">Sort By Class</button>
+            <button class="btn" onclick="sort('gender')">Sort By Gender</button>
           </div>
 
           <table id="table">
-            
+            <thead>
               <tr>
                 <th>ID</th>
                 <th>Name</th>
@@ -39,8 +39,26 @@
                 <th>Passing</th>
                 <th>Email</th>
               </tr>
-              
-            
+            </thead>
+            <tbody id="tablebody">
+
+            </tbody>
+          </table>
+
+          <table >
+            <caption>
+              <H1>MALE TABLE</H1>
+            </caption>
+            <tbody id="MaleTablebody">
+            </tbody>
+          </table>
+
+          <table >
+            <caption>
+              <H1>FEMALE TABLE</H1>
+            </caption>
+            <tbody id="FemaleTablebody">
+            </tbody>
           </table>
         </div>
       </div>

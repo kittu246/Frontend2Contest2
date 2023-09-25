@@ -1,131 +1,121 @@
 // fetching data from json and adding in table
-fetch("./demo-json-data.json")
-.then(response => {
-    return response.json();
- })
- .then(data => getData(data));
+let tableBody = document.getElementById("tablebody");
+let maleTableBody = document.getElementById("MaleTablebody");
+let femaleTableBody = document.getElementById("FemaleTablebody");
+let student = [];
+fetch(
+  "https://gist.githubusercontent.com/harsh3195/b441881e0020817b84e34d27ba448418/raw/c4fde6f42310987a54ae1bc3d9b8bfbafac15617/demo-json-data.json"
+)
+  .then((response) => response.json())
+  .then((data) => {
+    student = data;
+    displaydata(student, tableBody);  //as we can access data inside then so we are calling disaplydata here;
+  });
 
- let table = document.getElementById("table");
+//display data
+function displaydata(student, tableBody) {
+  tableBody.innerHTML = "";
 
-function getData (data){
-    
+  student.forEach((element) => {
+    let row = tableBody.insertRow();
+    const id = row.insertCell(0);
+    const name = row.insertCell(1);
+    const gender = row.insertCell(2);
+    const Class = row.insertCell(3);
+    const marks = row.insertCell(4);
+    const passing = row.insertCell(5);
+    const email = row.insertCell(6);
 
- for(let i=0;i<data.length;i++){
-
-    let tr = document.createElement("tr");
-
-    tr.innerHTML = `<td>${data[i].id} </td>
-    <td> ${data[i].first_name} ${data[i].last_name} </td>  
-    <td> ${data[i].gender} </td> 
-    <td> ${data[i].class} </td> 
-    <td> ${data[i].marks} </td> 
-    <td> ${data[i].passing} </td> 
-    <td> ${data[i].email} </td>`  ;
-
-    table.appendChild(tr);
-
- }
+    id.innerText = `${element.id}`;
+    name.innerHTML = `<img src="${element.img_src}" width=25px >  ${element.first_name} ${element.last_name} `;
+    gender.innerText = `${element.gender}`;
+    Class.innerText = `${element.class}`;
+    marks.innerText = `${element.marks}`;
+    passing.innerText = `${element.passing}`;
+    email.innerText = `${element.email}`;
+  });
 }
 
 
-// search functionality
-let input =document.getElementById("myInput");
+//search functionality
 
+let search = document.getElementById("SearchBtn");
 
-let Searchbutton = document.getElementById("SearchBtn");
-Searchbutton.addEventListener("click",search);
+search.addEventListener("click",Search);
 
-function search(){
-    
- let inputValue = input.value.toUpperCase();
-
-
- let row = document.getElementsByTagName("tr");
+function Search(){
  
- for(let i=1;i<row.length;i++){
-    let tableData = row[i].getElementsByTagName("td");  
-   
-    
 
-    if(tableData[1].innerText.toUpperCase().indexOf(inputValue) > -1 || tableData[6].innerText.toUpperCase().indexOf(inputValue) > -1 ){
- 
-        row[i].style.display = "";
+const userInput = document.getElementById("myInput").value.toLowerCase();
 
 
-    }
-    else{
-
-        row[i].style.display = "none";
-    }
-   }
+const filtereddata = student.filter((element) =>{
+  // element.first_name.toUpperCase() == UserInput
+  // we can't use this as lhs can not be always equal to userInput
+  return element.first_name.toLowerCase().includes(userInput) || element.last_name.toLowerCase().includes(userInput) || element.email.toLowerCase().includes(userInput)
 
 }
+//when we are using curly braces we need to use return keyword to et the return value, and if usingsingleline no return keywordis required
+  
+);
+displaydata(filtereddata, tableBody);
+}
 
-// Sort A->Z means ascending order of full name
+// sort Functionality
+function sort(type){
 
-let ZA = document.getElementById("az");
+  switch (type){
+    case"ased":
+  student.sort((a,b) => a.first_name.localeCompare(b.first_name))
+  displaydata(student,tableBody);
+    break;
 
-ZA.addEventListener("click",sortAZ);
+    case "desc":
+      student.sort((a,b) => b.first_name.localeCompare(a.first_name))
+      displaydata(student,tableBody);
+      break;
 
-function sortAZ(){
-    console.log("hey there");
+    case "marks":
+      student.sort((a,b) =>
+      a.marks-b.marks)
+      displaydata(student,tableBody);
+      break;
 
-    let row = document.getElementsByTagName("tr");
-    let arr = [];
+    case "passing":
+      const pass = student.filter((ele) => ele.passing== true )
+     displaydata(pass,tableBody);
+     break;
 
-    for(let i=1;i<(row.length-1);i++){
-        let tableData = row[i].getElementsByTagName("td")[1];
-       
-        let tableDataNext = row[i+1].getElementsByTagName("td")[1];
-        // console.log(row[i].parentNode);
+    case "Class":
+      student.sort((a,b)=>
+      a.class-b.class)
+      displaydata(student,tableBody);
+      break;
 
-        if(tableData.innerText.toUpperCase() > tableDataNext.innerText.toUpperCase() ){
-            row[i].parentNode.insertBefore(row[i+1],row[i]);
-        }
-        
-        
-        // console.log(row[i+1].tableData[1]);
-        // arr.push(tableData[1]);
+    case "gender":
 
-        // row.sort(row[i].tableData[1],row[i+1].tableData[1]);
+      let Female = student.filter((ele) =>
+      ele.gender == 'Female'
+      )
+      console.log(Female);
 
-    }
+      displaydata(Female,femaleTableBody);
+
+      let Male = student.filter((ele) =>
+      ele.gender == 'Male'
+      )
+      displaydata(Male,maleTableBody);
+
+
+      tableBody.style.display= 'none';
+
+     break;
+
+     default:break;
 
     
-
-
+  }
+  
 }
 
 
-// marks sorting
-
-let marks = document.getElementById("marks");
-
-marks.addEventListener("click",sortMarks);
-
-function sortMarks(){
-    console.log("hey there");
-
-    let row = document.getElementsByTagName("tr");
-    
-    
-
-    for(let i=1;i<(row.length-1);i++){
-        let tableData = row[i].getElementsByTagName("td")[3];
-       
-        let tableDataNext = row[i+1].getElementsByTagName("td")[3];
-        // console.log(typeof parseInt(tableData.innerText));
-
-        if(parseInt(tableData.innerText) > parseInt(tableDataNext.innerText) ){
-            row[i].parentNode.insertBefore(row[i+1],row[i]);
-        }
-        
-        
-       
-
-    }
-
-    
-
-
-}
